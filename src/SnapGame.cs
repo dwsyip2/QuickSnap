@@ -14,7 +14,7 @@ namespace CardGames
 			SwinGame.LoadFontNamed ("GameFont", "Chunkfive.otf", 24);
 			SwinGame.DrawText ("Score", Color.White, 0, 30);
         }
-
+		 
 		/// <summary>
 		/// Respond to the user input -- with requests affecting myGame
 		/// </summary>

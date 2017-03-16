@@ -125,7 +125,7 @@ namespace CardGames.GameLogic
 			else
 				return 0;
 		}
-
+		 
 		/// <summary>
 		/// The player hit the top of the cards "snap"! :)
 		/// Check if the top two cards' ranks match.
