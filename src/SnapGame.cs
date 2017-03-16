@@ -26,6 +26,7 @@ namespace CardGames
 
 			if (SwinGame.KeyTyped (KeyCode.vk_SPACE))
 			{
+<<<<<<< Updated upstream
 				myGame.FlipNextCard ();
 			}
 			if (myGame.IsStarted)
@@ -44,6 +45,10 @@ namespace CardGames
 					myGame.PlayerHit (1);
 				}
 			}
+=======
+				myGame.Start ();
+			}
+>>>>>>> Stashed changes
 		}
 
 		/// <summary>
