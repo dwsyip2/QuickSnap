@@ -8,11 +8,11 @@ namespace CardGames
     {
         public static void LoadResources()
         {
-			Bitmap cards;
+			Bitmap cards;    
             cards = SwinGame.LoadBitmapNamed ("Cards", "Cards.png");
             SwinGame.BitmapSetCellDetails (cards, 82, 110, 13, 5, 53);      // set the cells in the bitmap to match the cards
 			SwinGame.LoadFontNamed ("GameFont", "Chunkfive.otf", 24);
-			SwinGame.DrawText ("Score", Color.White, 0, 30);
+
         }
 
 		/// <summary>
@@ -59,9 +59,10 @@ namespace CardGames
 			Card top = myGame.TopCard;
 			if (top != null)
 			{
+				
 				SwinGame.DrawText ("Top Card is " + top.ToString (), Color.Aqua, 0, 20);
-				SwinGame.DrawText ("Player 1 score: " + myGame.Score(0), Color.Aqua, 0, 30);
-				SwinGame.DrawText ("Player 2 score: " + myGame.Score(1), Color.Aqua, 0, 40);
+				SwinGame.DrawText ("Player 1 score: " + myGame.Score(0), Color.Red, "GameFont",0, 30);
+				SwinGame.DrawText ("Player 2 score: " + myGame.Score(1), Color.Red, "GameFont" ,0, 50);
 				SwinGame.DrawCell (SwinGame.BitmapNamed ("Cards"), top.CardIndex, 521, 153);
 			}
 			else
