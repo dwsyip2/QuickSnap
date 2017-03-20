@@ -3,7 +3,7 @@ using SwinGameSDK;
 
 #if DEBUG
 using NUnit.Framework;
-#endif 
+#endif
 
 
 namespace CardGames.GameLogic
@@ -15,7 +15,7 @@ namespace CardGames.GameLogic
 	public class Snap
 	{
 		// Keep only the last two cards...
-		private readonly Card[] _topCards = new Card[2];
+		private readonly Card [] _topCards = new Card [2];
 
 		// Have a Deck of cards to play with.
 		private readonly Deck _deck;
@@ -27,9 +27,14 @@ namespace CardGames.GameLogic
 		private int _flipTime = 1000;
 
 		// the score for the 2 players
-		private int[] _score = new int[2];
+		private int [] _score = new int [2];
 
 		private bool _started = false;
+
+		Card [] _cards = new Card [52];
+
+		private int _topCard;
+
 
 		/// <summary>
 		/// Create a new game of Snap!
@@ -44,10 +49,8 @@ namespace CardGames.GameLogic
 		/// Gets the card on the top of the "flip" stack. This card will be face up.
 		/// </summary>
 		/// <value>The top card.</value>
-		public Card TopCard
-		{
-			get
-			{
+		public Card TopCard {
+			get {
 				return _topCards [1];
 			}
 		}
@@ -57,8 +60,7 @@ namespace CardGames.GameLogic
 		/// The game is over when there are no cards remaining.
 		/// </summary>
 		/// <value><c>true</c> if cards remain; otherwise, <c>false</c>.</value>
-		public bool CardsRemain
-		{
+		public bool CardsRemain {
 			get { return _deck.CardsRemaining > 0; }
 		}
 
@@ -67,8 +69,7 @@ namespace CardGames.GameLogic
 		/// and placed on the top of the game's card stack.
 		/// </summary>
 		/// <value>The flip time.</value>
-		public int FlipTime
-		{
+		public int FlipTime {
 			get { return _flipTime; }
 			set { _flipTime = value; }
 		}
@@ -77,33 +78,32 @@ namespace CardGames.GameLogic
 		/// Indicates if the game has already been started. You can only start the game once.
 		/// </summary>
 		/// <value><c>true</c> if this instance is started; otherwise, <c>false</c>.</value>
-		public bool IsStarted
-		{
+		public bool IsStarted {
 			get { return _started; }
 		}
 
 		/// <summary>
 		/// Start the Snap game playing!
 		/// </summary>
-		public void Start()
+		public void Start ()
 		{
-			if ( ! IsStarted )			// only start if not already started!
+			if (!IsStarted)         // only start if not already started!
 			{
 				_started = true;
-				_deck.Shuffle ();		// Return the cards and shuffle
+				_deck.Shuffle ();       // Return the cards and shuffle
 
 				FlipNextCard ();        // Flip the first card...
 				_gameTimer.Start ();
 			}
 		}
-			
-		public void FlipNextCard()
+
+		public void FlipNextCard ()
 		{
-			if (_deck.CardsRemaining > 0)			// have cards...
+			if (_deck.CardsRemaining > 0)           // have cards...
 			{
-				_topCards [0] = _topCards [1];		// move top to card 2
-				_topCards [1] = _deck.Draw ();		// get a new top card
-				_topCards[1].TurnOver();			// reveal card
+				_topCards [0] = _topCards [1];      // move top to card 2
+				_topCards [1] = _deck.Draw ();      // get a new top card
+				_topCards [1].TurnOver ();          // reveal card
 			}
 		}
 
@@ -111,11 +111,10 @@ namespace CardGames.GameLogic
 		/// Update the game. This should be called in the Game loop to enable
 		/// the game to update its internal state.
 		/// </summary>
-		public void Update()
+		public void Update ()
 		{
 			//TODO: implement update to automatically slip cards!
-			if (_gameTimer.Ticks > _flipTime)
-			{
+			if (_gameTimer.Ticks > _flipTime) {
 				_gameTimer.Reset ();
 				FlipNextCard ();
 			}
@@ -125,14 +124,14 @@ namespace CardGames.GameLogic
 		/// Gets the player's score.
 		/// </summary>
 		/// <value>The score.</value>
-		public int Score(int idx)
+		public int Score (int idx)
 		{
-			if ( idx >= 0 && idx < _score.Length )
-				return _score[idx]; 
+			if (idx >= 0 && idx < _score.Length)
+				return _score [idx];
 			else
 				return 0;
 		}
-		 
+
 		/// <summary>
 		/// The player hit the top of the cards "snap"! :)
 		/// Check if the top two cards' ranks match.
@@ -140,24 +139,43 @@ namespace CardGames.GameLogic
 		public void PlayerHit (int player)
 		{
 			//TODO: consider deducting score for miss hits???
-			if ( player >= 0 && player < _score.Length &&  	// its a valid player
-				 IsStarted && 								// and the game is started
+			if (player >= 0 && player < _score.Length &&    // its a valid player
+				 IsStarted &&                               // and the game is started
 				 _topCards [0] != null && _topCards [0].Rank == _topCards [1].Rank) // and its a match
 			{
-				_score[player]++;
+				_score [player]++;
 				//TODO: consider playing a sound here...
-			}
-			else if ( player >= 0 && player < _score.Length)
-			{
-				_score[player]--;
+			} else if (player >= 0 && player < _score.Length) {
+				_score [player]--;
 			}
 			// stop the game...
 			_started = false;
 			_gameTimer.Stop ();
 		}
-	
+
+		public void Shuffle ()
+		{
+			for (int i = 0; i < 52; i++) {
+				if (_cards [i].FaceUp) _cards [i].TurnOver ();
+			}
+
+			Random rnd = new Random ();
+
+			// for each card (no need to shuffle last card)
+			for (int i = 0; i < 52 - 1; i++) {
+				// pick a random index
+				int rndIdx = rnd.Next (52 - i);
+
+				Card temp = _cards [i];
+				_cards [i] = _cards [i + rndIdx];
+				_cards [i + rndIdx] = temp;
+			}
+
+			_topCard = 0;
+		}
+
 		#region Snap Game Unit Tests
-		#if DEBUG
+#if DEBUG
 
 		public class SnapTests
 		{
@@ -185,7 +203,7 @@ namespace CardGames.GameLogic
 			}
 		}
 
-		#endif 
+#endif
 		#endregion
 	}
 }
